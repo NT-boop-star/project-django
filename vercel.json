@@ -1,7 +1,7 @@
 {
   "builds": [
     {
-      "src": "caisse_retraite/wsgi.py",
+      "src": "caisse_retraite/caisse_retraite/wsgi.py",
       "use": "@vercel/python",
       "config": { "maxLambdaSize": "15mb", "runtime": "python3.9" }
     }
@@ -9,7 +9,7 @@
   "routes": [
     {
       "src": "/(.*)",
-      "dest": "caisse_retraite/wsgi.py"
+      "dest": "caisse_retraite/caisse_retraite/wsgi.py"
     }
   ],
   "env": {
