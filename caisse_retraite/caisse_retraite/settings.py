@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 from pathlib import Path
 import os
 from dotenv import load_dotenv
+import dj_database_url
 
 load_dotenv()
 
@@ -81,19 +82,26 @@ WSGI_APPLICATION = 'caisse_retraite.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.getenv('DB_NAME', 'db_caissex'),
-        'USER': os.getenv('DB_USER', 'db_caisse_user'),
-        'PASSWORD': os.getenv('DB_PASSWORD', 'bZ-R?]d#sKs6m)6'),
-        'HOST': os.getenv('DB_HOST', 'postgresql-210828-0.cloudclusters.net'),
-        'PORT': os.getenv('DB_PORT', '10072'),
-        'OPTIONS': {
-            'sslmode': 'require',
-        },
+# Use DATABASE_URL if available (for Render/Vercel), otherwise use individual settings
+if os.getenv('DATABASE_URL'):
+    DATABASES = {
+        'default': dj_database_url.config(
+            default=os.getenv('DATABASE_URL'),
+            conn_max_age=600,
+            conn_health_checks=True,
+        )
     }
-}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': os.getenv('DB_NAME', 'caisse_retraite'),
+            'USER': os.getenv('DB_USER', 'caisse_user'),
+            'PASSWORD': os.getenv('DB_PASSWORD', ''),
+            'HOST': os.getenv('DB_HOST', 'localhost'),
+            'PORT': os.getenv('DB_PORT', '5432'),
+        }
+    }
 
 
 # Password validation
