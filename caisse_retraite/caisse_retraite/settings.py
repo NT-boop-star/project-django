@@ -11,6 +11,10 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 
 from pathlib import Path
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,12 +24,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-+9=o=)oj+_gmjar^y(k_5p^rg%4^665s$5^jgand6gv7&w@e=7'
+SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-+9=o=)oj+_gmjar^y(k_5p^rg%4^665s$5^jgand6gv7&w@e=7')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv('DEBUG', 'False') == 'True'
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
 
 
 # Application definition
@@ -80,11 +84,11 @@ WSGI_APPLICATION = 'caisse_retraite.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'db_caissex',           # ← votre nom de base
-        'USER': 'db_caisse_user',       # ← votre utilisateur
-        'PASSWORD': 'bZ-R?]d#sKs6m)6',  # ← votre mot de passe
-        'HOST': 'postgresql-210828-0.cloudclusters.net',  # ← votre host
-        'PORT': '10072',                # ← votre port
+        'NAME': os.getenv('DB_NAME', 'db_caissex'),
+        'USER': os.getenv('DB_USER', 'db_caisse_user'),
+        'PASSWORD': os.getenv('DB_PASSWORD', 'bZ-R?]d#sKs6m)6'),
+        'HOST': os.getenv('DB_HOST', 'postgresql-210828-0.cloudclusters.net'),
+        'PORT': os.getenv('DB_PORT', '10072'),
         'OPTIONS': {
             'sslmode': 'require',
         },
@@ -126,4 +130,8 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATICFILES_DIRS = [
+    BASE_DIR / 'static',
+]
